@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  elasticsearch:    
+    build: ./elasticsearch
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - ES_JAVA_OPTS=-Xmx256m -Xms256m    
+
+  logstash:    
+    build: ./logstash
+    container_name: logstash
+    ports:
+      - "5000:5000"
+    environment:
+      - AMQP_USER=amqp_user
+      - AMQP_PWD=amqp2018
+      - ES_USER=elastic
+      - ES_PWD=changeme
+      - LS_JAVA_OPTS=-Xms128m -Xmx512m
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.6-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=amqp_user
+      - RABBITMQ_DEFAULT_PASS=amqp2018
